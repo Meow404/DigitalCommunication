@@ -1,4 +1,4 @@
-function NoisyData = NoisyDataGeneration(Data, SIZE, SNR)
+function NoisyData = NoisySignalGeneration(Data, SIZE, SNR)
 
 noise_gen=randn(1,SIZE); % This is an array of Noise that is normaly distributed
 
