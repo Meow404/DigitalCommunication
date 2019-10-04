@@ -10,7 +10,7 @@ dataRate = 1000; %Number of bits transfered per second
 numberOfSamplesPerBit =  round(Fs/dataRate); %Number of samples per bit
 totalNumberOfSamples = round(Fs*SIZE/dataRate); %Total Number of samples to be modulated
 
-%Signal 
+%Signal (-1,1) generated from random original signal (0,1)
 signal = DataToSignalGeneration(originalData, SIZE);
 
 %Initialization of Carrier Signal with an array of zeros
