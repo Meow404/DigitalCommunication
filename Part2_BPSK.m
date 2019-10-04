@@ -1,14 +1,17 @@
 SIZE = 10240; %Number of bits to be transmitted
 originalData= randi([0 1],1,SIZE); % This generates an array of random binary numbers
-SNR = 20; %Signal  to Noise Ratio
+SNR = 5; %Signal  to Noise Ratio
 
 Fc = 10000; %Carrier Frequency
 Fs = Fc * 16; %Sampling Frequency
-index = 1:2000; %Output Range
+index = 1:1000; %Output Range
 
 dataRate = 1000; %Number of bits transfered per second
 numberOfSamplesPerBit =  round(Fs/dataRate); %Number of samples per bit
 totalNumberOfSamples = round(Fs*SIZE/dataRate); %Total Number of samples to be modulated
+
+%Signal 
+signal = DataToSignalGeneration(originalData, SIZE);
 
 %Initialization of Carrier Signal with an array of zeros
 carrierSignal = zeros(1,totalNumberOfSamples); 
@@ -16,7 +19,7 @@ Loop = 1;
 
 %Loop to obtain sampled cosined values as carrier signal
 while(Loop<=totalNumberOfSamples)
-carrierSignal(Loop) = cos(2*pi*(Fc/Fs)*Loop);
+carrierSignal(Loop) = 2*pi*(Fc/Fs)*Loop;
 Loop = Loop+1;
 end
 
@@ -24,7 +27,8 @@ end
 
 %Multiplication of carrier signal with input signal
 replicatedData = repelem(originalData,numberOfSamplesPerBit);
-modulatedSignal = carrierSignal.*replicatedData;
+additionalPhase = pi*(replicatedData+1);
+modulatedSignal = cos(carrierSignal+additionalPhase);
 
 %disp(modulatedSignal);
 
@@ -38,10 +42,10 @@ figure();
 plot(index,noisySignal(1:length(index)));
 
 %To Obtain demodulated signal by multiplying with twice the carrier signal
-demodulatedSignal = (2*carrierSignal).*noisySignal;
+demodulatedSignal = (2*cos(carrierSignal)).*noisySignal;
 
 figure();
-plot(index,demodulatedSignal(1:2000));
+plot(index,demodulatedSignal(1:length(index)));
 
 %To generate a low pass butterworth 6th order filter and obtain filtered signal with
 %cutoff frequecy of 0.2
@@ -55,9 +59,9 @@ plot(index,filteredSignal(1:length(index)));
 demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
 
 %Use threshold logic to decode the received signal by setting threshold to 0.5 
-decodedData = DataDecoding(demodulatedData, SIZE, 0.5);
+decodedData = DataDecoding(demodulatedData, SIZE, 0,[-1,1]);
 
 %Calculate the bit error rate
-errorRate = ErrorRate(originalData,decodedData, SIZE);
+errorRate = ErrorRate(signal,decodedData, SIZE);
 
 disp("Error : "+ errorRate);
