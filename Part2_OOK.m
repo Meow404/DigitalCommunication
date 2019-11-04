@@ -1,4 +1,4 @@
-function errorRate = Part2_OOK(SNR)
+function errorRate = Part2_OOK(SNR, showFigures)
 
 SIZE = 1024; %Number of bits to be transmitted
 originalData= randi([0 1],1,SIZE); % This generates an array of random binary numbers
@@ -28,28 +28,36 @@ modulatedSignal = carrierSignal.*replicatedData;
 
 %disp(modulatedSignal);
 
-%figure();
-%plot(index,modulatedSignal(1:length(index)));
+if(showFigures)
+    figure();
+    plot(index,modulatedSignal(1:length(index)));
+end
 
 %To generate artificial noise to be added with the modulated signal
 noisySignal = NoisySignalGeneration(modulatedSignal, totalNumberOfSamples, SNR);
 
-%figure();
-%plot(index,noisySignal(1:length(index)));
+if(showFigures)
+    figure();
+    plot(index,noisySignal(1:length(index)));
+end
 
 %To Obtain demodulated signal by multiplying with twice the carrier signal
 demodulatedSignal = (2*carrierSignal).*noisySignal;
 
-%figure();
-%plot(index,demodulatedSignal(1:2000));
+if(showFigures)
+    figure();
+    plot(index,demodulatedSignal(1:length(index)));
+end
 
 %To generate a low pass butterworth 6th order filter and obtain filtered signal with
 %cutoff frequecy of 0.2
 [b,a] = butter(6,0.2);
 filteredSignal = filtfilt(b,a,demodulatedSignal);
 
-%figure();
-%plot(index,filteredSignal(1:length(index)));
+if(showFigures)
+    figure();
+    plot(index,filteredSignal(1:length(index)));
+end
 
 %Obtain midpoints from recieved filtered signal
 demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);

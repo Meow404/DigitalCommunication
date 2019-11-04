@@ -1,4 +1,4 @@
-function errorRate = Part2_BFSK(SNR)
+function errorRate = Part2_BFSK(SNR, showGraphs)
 
 SIZE = 1024; %Number of bits to be transmitted
 originalData= randi([0 1],1,SIZE); % This generates an array of random binary numbers
@@ -16,13 +16,13 @@ totalNumberOfSamples = round(Fs*SIZE/dataRate); %Total Number of samples to be m
 
 
 %Initialization of Carrier Signal with an array of zeros
-carrierSignal1 = zeros(1,totalNumberOfSamples); 
+carrierSignal1 = zeros(1,totalNumberOfSamples);
 carrierSignal2 = zeros(1,totalNumberOfSamples);
 
 
 for Loopc = 1:totalNumberOfSamples
-carrierSignal1(Loopc) = cos(2*pi*(F1/Fs)*(Loopc-1)+pi/2);
-carrierSignal2(Loopc) = cos(2*pi*(F2/Fs)*(Loopc-1)+pi/2);
+    carrierSignal1(Loopc) = cos(2*pi*(F1/Fs)*(Loopc-1)+pi/2);
+    carrierSignal2(Loopc) = cos(2*pi*(F2/Fs)*(Loopc-1)+pi/2);
 end
 
 %Initialization of Modulated Signal with an array of zeros
@@ -47,21 +47,29 @@ end
 %fprintf("Original Data");
 %disp(originalData);
 
-%figure();
-%plot(index,modulatedSignal(1:length(index)));
+if(showGraphs)
+    figure();
+    plot(index,modulatedSignal(1:length(index)));
+end
 
 %To generate artificial noise to be added with the modulated signal
 noisySignal = NoisySignalGeneration(modulatedSignal, totalNumberOfSamples, SNR);
 
-%figure();
-%plot(index,noisySignal(1:length(index)));
+if(showGraphs)
+    figure();
+    plot(index,noisySignal(1:length(index)));
+end
 
 %To Obtain demodulated signal by multiplying with twice the carrier signal
 demodulatedSignal1 = (2*carrierSignal1).*noisySignal;
 demodulatedSignal2 = (2*carrierSignal2).*noisySignal;
 
-%figure();
-%plot(index,demodulatedSignal1(1:length(index)));
+if(showGraphs)
+    figure();
+    plot(index,demodulatedSignal1(1:length(index)));
+    figure();
+    plot(index,demodulatedSignal2(1:length(index)));
+end
 
 %To generate a low pass butterworth 6th order filter and obtain filtered signal with
 %cutoff frequecy of 0.2
@@ -69,14 +77,24 @@ demodulatedSignal2 = (2*carrierSignal2).*noisySignal;
 filteredSignal1 = filtfilt(b,a,demodulatedSignal1);
 filteredSignal2 = filtfilt(b,a,demodulatedSignal2);
 
-%figure();
-%plot(index,filteredSignal(1:length(index)));
+if(showGraphs)
+    figure();
+    plot(index,filteredSignal1(1:length(index)));
+    figure();
+    plot(index,filteredSignal2(1:length(index)));
+end
 
 %Obtain midpoints from recieved filtered signal
 demodulatedSignal = filteredSignal1-filteredSignal2;
+
+if(showGraphs)
+    figure();
+    plot(index,demodulatedSignal(1:length(index)));
+end
+
 demodulatedData = demodulatedSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
 
-%Use threshold logic to decode the received signal by setting threshold to 0.5 
+%Use threshold logic to decode the received signal by setting threshold to 0.5
 decodedData = DataDecoding(demodulatedData, SIZE, 0,[0,1]);
 
 %Calculate the bit error rate

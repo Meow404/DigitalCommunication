@@ -1,4 +1,4 @@
-function errorRate = Part2_Mary(SNR)
+function errorRate = Part2_Mary(SNR, showFigures)
 
 SIZE = 1024; %Number of bits to be transmitted
 originalData= randi([0 1],1,SIZE); % This generates an array of random binary numbers
@@ -24,11 +24,11 @@ formattedData = FormatData(originalData, SIZE, m);
 compressedData = CompressData(formattedData,newSize, m);
 
 %Initialization of Carrier Signal with an array of zeros
-carrierSignal = zeros(1,totalNumberOfSamples); 
+carrierSignal = zeros(1,totalNumberOfSamples);
 
 %Loop to obtain sampled cosined values as carrier signal
 for Loop = 1:totalNumberOfSamples
-carrierSignal(Loop) = cos(2*pi*(Fc/Fs)*(Loop-1)+pi/2);
+    carrierSignal(Loop) = cos(2*pi*(Fc/Fs)*(Loop-1)+pi/2);
 end
 
 %disp(carrierSignal);
@@ -39,33 +39,41 @@ modulatedSignal = carrierSignal.*replicatedData;
 
 %disp(modulatedSignal);
 
-%figure();
-%plot(index,modulatedSignal(1:length(index)));
+if(showFigures)
+    figure();
+    plot(index,modulatedSignal(1:length(index)));
+end
 
 %To generate artificial noise to be added with the modulated signal
 noisySignal = NoisySignalGeneration(modulatedSignal, totalNumberOfSamples, SNR);
 
-%figure();
-%plot(index,noisySignal(1:length(index)));
+if(showFigures)
+    figure();
+    plot(index,noisySignal(1:length(index)));
+end
 
 %To Obtain demodulated signal by multiplying with twice the carrier signal
 demodulatedSignal = (2*carrierSignal).*noisySignal;
 
-%figure();
-%plot(index,demodulatedSignal(1:2000));
+if(showFigures)
+    figure();
+    plot(index,demodulatedSignal(1:2000));
+end
 
 %To generate a low pass butterworth 6th order filter and obtain filtered signal with
 %cutoff frequecy of 0.2
 [b,a] = butter(6,0.2);
 filteredSignal = filtfilt(b,a,demodulatedSignal);
 
-%figure();
-%plot(index,filteredSignal(1:length(index)));
+if(showFigures)
+    figure();
+    plot(index,filteredSignal(1:length(index)));
+end
 
 %Obtain midpoints from recieved filtered signal
 demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
 
-%Use threshold logic to decode the received signal by setting threshold at different levels 
+%Use threshold logic to decode the received signal by setting threshold at different levels
 decodedData = MaryDataDecoding(demodulatedData, newSize, M);
 
 %function to decompress data symbols eg. 7 = 111

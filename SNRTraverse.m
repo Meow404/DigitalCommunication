@@ -7,7 +7,7 @@ finalErrorRate = zeros(1,length(SNR));
 for i = 1 : length(SNR)
     totalErrorRate = 0;
     for j = 1 : count
-        totalErrorRate = totalErrorRate + func(SNR(i));
+        totalErrorRate = totalErrorRate + func(SNR(i), 0);
     end
     finalErrorRate(i) = totalErrorRate/count;
 end

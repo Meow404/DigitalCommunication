@@ -1,4 +1,4 @@
-function errorRate = Part2_BPSK(SNR)
+function errorRate = Part2_BPSK(SNR, showGraphs)
 
 SIZE = 1024; %Number of bits to be transmitted
 originalData= randi([0 1],1,SIZE); % This generates an array of random binary numbers
@@ -15,13 +15,13 @@ totalNumberOfSamples = round(Fs*SIZE/dataRate); %Total Number of samples to be m
 signal = DataToSignalGeneration(originalData, SIZE);
 
 %Initialization of Carrier Signal with an array of zeros
-carrierSignal = zeros(1,totalNumberOfSamples); 
+carrierSignal = zeros(1,totalNumberOfSamples);
 Loop = 1;
 
 %Loop to obtain sampled cosined values as carrier signal
 while(Loop<=totalNumberOfSamples)
-carrierSignal(Loop) = 2*pi*(Fc/Fs)*(Loop-1) + pi/2;
-Loop = Loop+1;
+    carrierSignal(Loop) = 2*pi*(Fc/Fs)*(Loop-1) + pi/2;
+    Loop = Loop+1;
 end
 
 
@@ -32,33 +32,38 @@ modulatedSignal = cos(carrierSignal + additionalPhase);
 
 %disp(modulatedSignal);
 
-%figure();
-%plot(index,modulatedSignal(1:length(index)));
+if(showGraphs)
+    figure();
+    plot(index,modulatedSignal(1:length(index)));
+end
 
 %To generate artificial noise to be added with the modulated signal
 noisySignal = NoisySignalGeneration(modulatedSignal, totalNumberOfSamples, SNR);
 
-%figure();
-%plot(index,noisySignal(1:length(index)));
-
+if(showGraphs)
+    figure();
+    plot(index,noisySignal(1:length(index)));
+end
 %To Obtain demodulated signal by multiplying with twice the carrier signal
 demodulatedSignal = (2*cos(carrierSignal)).*noisySignal;
 
-%figure();
-%plot(index,demodulatedSignal(1:length(index)));
-
+if(showGraphs)
+    figure();
+    plot(index,demodulatedSignal(1:length(index)));
+end
 %To generate a low pass butterworth 6th order filter and obtain filtered signal with
 %cutoff frequecy of 0.2
 [b,a] = butter(6,0.2);
 filteredSignal = filtfilt(b,a,demodulatedSignal);
 
-%figure();
-%plot(index,filteredSignal(1:length(index)));
-
+if(showGraphs)
+    figure();
+    plot(index,filteredSignal(1:length(index)));
+end
 %Obtain midpoints from recieved filtered signal
 demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
 
-%Use threshold logic to decode the received signal by setting threshold to 0.5 
+%Use threshold logic to decode the received signal by setting threshold to 0.5
 decodedData = DataDecoding(demodulatedData, SIZE, 0,[-1,1]);
 
 %Calculate the bit error rate
