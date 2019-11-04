@@ -3,17 +3,12 @@ gen_bin_random= randi([0 1],1,n); % This generates an array of random binary num
 gen_convert= gen_bin_random;
 disp(gen_convert);
 
-loop_var=1;
-while loop_var <= 1024  %This loop makes every 0 into a -1
+for loop_var = 1 : 1024  %This loop makes every 0 into a -1
         
         if (gen_convert(loop_var)==0);
             gen_convert(loop_var)=-1;
-        end        
-            
-        loop_var=loop_var+1;
-        
-        
-        
+        end       
+      
 end 
 
 noise_gen=randn(1,n); % This is an array of Noise that is normaly distributed
