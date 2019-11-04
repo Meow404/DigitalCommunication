@@ -6,7 +6,7 @@ originalData= randi([0 1],1,SIZE); % This generates an array of random binary nu
 
 Fc = 10000; %Carrier Frequency
 Fs = Fc * 16; %Sampling Frequency
-index = 1:2000; %Output Range
+index = 1:200; %Output Range
 
 dataRate = 1000; %Number of bits transfered per second
 numberOfSamplesPerBit =  round(Fs/dataRate); %Number of samples per bit
@@ -14,12 +14,10 @@ totalNumberOfSamples = round(Fs*SIZE/dataRate); %Total Number of samples to be m
 
 %Initialization of Carrier Signal with an array of zeros
 carrierSignal = zeros(1,totalNumberOfSamples);
-Loop = 1;
 
 %Loop to obtain sampled cosined values as carrier signal
-while(Loop<=totalNumberOfSamples)
-    carrierSignal(Loop) = cos(2*pi*(Fc/Fs)*Loop);
-    Loop = Loop+1;
+for Loop = 1:totalNumberOfSamples
+    carrierSignal(Loop) = cos(2*pi*(Fc/Fs)*(Loop-1)+pi/2);
 end
 
 %disp(carrierSignal);

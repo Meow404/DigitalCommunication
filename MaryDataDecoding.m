@@ -1,6 +1,6 @@
 function Data = MaryDataDecoding(receivedData, SIZE, M)
 
-loop_var=1
+loop_var=1;
 Data=zeros(1,SIZE);
 max = M-1;
 

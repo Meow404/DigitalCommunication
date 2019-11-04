@@ -1,7 +1,8 @@
+function errorRate = Part2_Mary(SNR)
+
 SIZE = 1024; %Number of bits to be transmitted
 originalData= randi([0 1],1,SIZE); % This generates an array of random binary numbers
-SNR = 5; %Signal  to Noise Ratio
-m = 4; %Number of BITS AVAILABLE FOR ENCODING
+m = 2; %Number of BITS AVAILABLE FOR ENCODING
 
 Fc = 10000; %Carrier Frequency
 Fs = Fc * 16; %Sampling Frequency
@@ -17,19 +18,17 @@ totalNumberOfSamples = round(Fs*newSize/dataRate); %Total Number of samples to b
 %Format data adds additional 0s to the end of the original data array if
 %there is a lack of number of bits eg 1024 => 1 bit extra, therefore add 2
 %zeros at the end of the array. Therefore new length = 1026
-formattedData = FormatData(originalData, SIZE, m)
+formattedData = FormatData(originalData, SIZE, m);
 
 %Function to compress data eg 1001 = 9
 compressedData = CompressData(formattedData,newSize, m);
 
 %Initialization of Carrier Signal with an array of zeros
 carrierSignal = zeros(1,totalNumberOfSamples); 
-Loop = 1;
 
 %Loop to obtain sampled cosined values as carrier signal
-while(Loop<=totalNumberOfSamples)
-carrierSignal(Loop) = cos(2*pi*(Fc/Fs)*Loop);
-Loop = Loop+1;
+for Loop = 1:totalNumberOfSamples
+carrierSignal(Loop) = cos(2*pi*(Fc/Fs)*(Loop-1)+pi/2);
 end
 
 %disp(carrierSignal);
@@ -40,34 +39,34 @@ modulatedSignal = carrierSignal.*replicatedData;
 
 %disp(modulatedSignal);
 
-figure();
-plot(index,modulatedSignal(1:length(index)));
+%figure();
+%plot(index,modulatedSignal(1:length(index)));
 
 %To generate artificial noise to be added with the modulated signal
 noisySignal = NoisySignalGeneration(modulatedSignal, totalNumberOfSamples, SNR);
 
-figure();
-plot(index,noisySignal(1:length(index)));
+%figure();
+%plot(index,noisySignal(1:length(index)));
 
 %To Obtain demodulated signal by multiplying with twice the carrier signal
 demodulatedSignal = (2*carrierSignal).*noisySignal;
 
-figure();
-plot(index,demodulatedSignal(1:2000));
+%figure();
+%plot(index,demodulatedSignal(1:2000));
 
 %To generate a low pass butterworth 6th order filter and obtain filtered signal with
 %cutoff frequecy of 0.2
 [b,a] = butter(6,0.2);
 filteredSignal = filtfilt(b,a,demodulatedSignal);
 
-figure();
-plot(index,filteredSignal(1:length(index)));
+%figure();
+%plot(index,filteredSignal(1:length(index)));
 
 %Obtain midpoints from recieved filtered signal
 demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
 
 %Use threshold logic to decode the received signal by setting threshold at different levels 
-decodedData = MaryDataDecoding(demodulatedData, newSize, M)
+decodedData = MaryDataDecoding(demodulatedData, newSize, M);
 
 %function to decompress data symbols eg. 7 = 111
 decompressedData = DecompressData(decodedData,newSize, m);
@@ -80,4 +79,4 @@ decompressedData = DecompressData(decodedData,newSize, m);
 %Calculate the bit error rate
 errorRate = ErrorRate(originalData,decompressedData, SIZE);
 
-disp("Error : "+ errorRate);
+end

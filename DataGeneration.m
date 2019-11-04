@@ -1,7 +1,7 @@
 n=1024;
 gen_bin_random= randi([0 1],1,n); % This generates an array of random binary numbers
 gen_convert= gen_bin_random;
-disp(gen_convert);
+%disp(gen_convert);
 
 for loop_var = 1 : 1024  %This loop makes every 0 into a -1
         

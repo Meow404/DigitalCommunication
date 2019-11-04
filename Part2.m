@@ -1,16 +1,23 @@
-SNR = (1:50);
-disp(SNR);
-
+SNR = (0.1:0.1:25);
 count = 100;
-finalErrorRate = zeros(1,length(SNR));
-
-for i = 1 : length(SNR)
-    totalErrorRate = 0;
-    for j = 1 : count
-        totalErrorRate = totalErrorRate + Part2_OOK(SNR(i));
-    end
-    finalErrorRate(i) = totalErrorRate/count;
-end
 
 figure();
-plot(SNR, finalErrorRate);
+
+finalErrorRate = SNRTraverse (SNR, count, 'Part2_OOK');
+semilogy(SNR, max(10^(-5),finalErrorRate));
+
+title('Error Rate Vs SNR for [OOK, BPSK, M-Ary, BFSK]')
+xlabel('SNR') 
+ylabel('Error Rate')
+hold on;
+
+finalErrorRate = SNRTraverse (SNR, count, 'Part2_BPSK');
+semilogy(SNR, max(10^(-5),finalErrorRate));
+
+finalErrorRate = SNRTraverse (SNR, count, 'Part2_Mary');
+semilogy(SNR, max(10^(-5),finalErrorRate));
+
+finalErrorRate = SNRTraverse (SNR, count, 'Part2_BFSK');
+semilogy(SNR, max(10^(-5),finalErrorRate));
+
+legend({'OOK','BPSK','M-Ary','BFSK'},'Location','southwest')
