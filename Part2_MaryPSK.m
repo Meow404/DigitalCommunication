@@ -1,7 +1,7 @@
-function errorRate = Part2_Mary(SNR, showFigures, m, amplitude, threshold)
+function errorRate = Part2_MaryPSK(SNR, showFigures, m, amplitude, threshold)
 
 if(nargin == 2)
-        m = 1; %Number of BITS AVAILABLE FOR ENCODING
+        m = 2; %Number of BITS AVAILABLE FOR ENCODING
         amplitude = 1;
         threshold = 0.5;
 end
@@ -11,7 +11,7 @@ originalData= randi([0 1],1,SIZE); % This generates an array of random binary nu
 
 Fc = 10000; %Carrier Frequency
 Fs = Fc * 16; %Sampling Frequency
-index = 1:2000; %Output Range
+index = 1:1000; %Output Range
 
 M = 2^m; %Number of ditince amplitude levels for each symbol
 newSize = ceil(SIZE/m); %Size of compressed data (data which represent m number of bits eg. 5 = 101, 8 = 111)
@@ -33,14 +33,15 @@ carrierSignal = zeros(1,totalNumberOfSamples);
 
 %Loop to obtain sampled cosined values as carrier signal
 for Loop = 1:totalNumberOfSamples
-    carrierSignal(Loop) = amplitude*cos(2*pi*(Fc/Fs)*(Loop-1)+pi/2);
+    carrierSignal(Loop) = 2*pi*(Fc/Fs)*(Loop-1)+pi/2;
 end
 
 %disp(carrierSignal);
 
 %Multiplication of carrier signal with input signal
-replicatedData = repelem(sqrt(compressedData/(M-1)),numberOfSamplesPerBit);
-modulatedSignal = carrierSignal.*replicatedData;
+replicatedData = repelem(compressedData,numberOfSamplesPerBit);
+additionalPhase = (2*pi/M)*(replicatedData+1);
+modulatedSignal = cos(carrierSignal + additionalPhase);
 
 %disp(modulatedSignal);
 
@@ -58,11 +59,11 @@ if(showFigures)
 end
 
 %To Obtain demodulated signal by multiplying with twice the carrier signal
-demodulatedSignal = (2*carrierSignal).*noisySignal;
+demodulatedSignal = (2*cos(carrierSignal)).*noisySignal;
 
 if(showFigures)
     figure();
-    plot(index,demodulatedSignal(1:2000));
+    plot(index,demodulatedSignal(1:length(index)));
 end
 
 %To generate a low pass butterworth 6th order filter and obtain filtered signal with
