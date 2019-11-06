@@ -1,7 +1,7 @@
 function errorRate = Part2_MaryASK(SNR, showFigures, m, amplitude, threshold)
 
 if(nargin == 2)
-        m = 1; %Number of BITS AVAILABLE FOR ENCODING
+        m = 2; %Number of BITS AVAILABLE FOR ENCODING
         amplitude = 1;
         threshold = 0.5;
 end
@@ -39,7 +39,7 @@ end
 %disp(carrierSignal);
 
 %Multiplication of carrier signal with input signal
-replicatedData = repelem(sqrt(compressedData/(M-1)),numberOfSamplesPerBit);
+replicatedData = repelem(compressedData/(M-1),numberOfSamplesPerBit);
 modulatedSignal = carrierSignal.*replicatedData;
 
 %disp(modulatedSignal);
@@ -80,7 +80,7 @@ demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:t
 demodulatedData = demodulatedData./(amplitude^2);
 
 %Use threshold logic to decode the received signal by setting threshold at different levels
-decodedData = MaryDataDecoding(demodulatedData, newSize, M, threshold);
+decodedData = MaryASKDataDecoding(demodulatedData, newSize, M, threshold);
 
 %function to decompress data symbols eg. 7 = 111
 decompressedData = DecompressData(decodedData,newSize, m);

@@ -1,9 +1,7 @@
-function errorRate = Part2_MaryPSK(SNR, showFigures, m, amplitude, threshold)
+function errorRate = Part2_MaryPSK(SNR, showFigures, m)
 
 if(nargin == 2)
-        m = 2; %Number of BITS AVAILABLE FOR ENCODING
-        amplitude = 1;
-        threshold = 0.5;
+    m = 2; %Number of BITS AVAILABLE FOR ENCODING
 end
 
 SIZE = 1024; %Number of bits to be transmitted
@@ -33,16 +31,15 @@ carrierSignal = zeros(1,totalNumberOfSamples);
 
 %Loop to obtain sampled cosined values as carrier signal
 for Loop = 1:totalNumberOfSamples
-    carrierSignal(Loop) = 2*pi*(Fc/Fs)*(Loop-1)+pi/2;
+    carrierSignal(Loop) = 2*pi*(Fc/Fs)*(Loop-1);
 end
 
 %disp(carrierSignal);
 
 %Multiplication of carrier signal with input signal
 replicatedData = repelem(compressedData,numberOfSamplesPerBit);
-additionalPhase = (2*pi/M)*(replicatedData+1);
+additionalPhase = (2*pi/M)*(replicatedData+0.5);
 modulatedSignal = cos(carrierSignal + additionalPhase);
-
 %disp(modulatedSignal);
 
 if(showFigures)
@@ -58,40 +55,55 @@ if(showFigures)
     plot(index,noisySignal(1:length(index)));
 end
 
-%To Obtain demodulated signal by multiplying with twice the carrier signal
-demodulatedSignal = (2*cos(carrierSignal)).*noisySignal;
+%To Obtain demodulated signal by multiplying with twice the Cos of carrier
+%signal to obtain in phase component and twice the Sin of carrier signal to
+%obtain quadrature component
+demodulatedSignal1 = (2*cos(carrierSignal)).*noisySignal;
+demodulatedSignal2 = (2*sin(carrierSignal)).*noisySignal;
 
 if(showFigures)
     figure();
-    plot(index,demodulatedSignal(1:length(index)));
+    plot(index,demodulatedSignal1(1:length(index)));
+    figure();
+    plot(index,demodulatedSignal2(1:length(index)));
 end
 
 %To generate a low pass butterworth 6th order filter and obtain filtered signal with
 %cutoff frequecy of 0.2
 [b,a] = butter(6,0.2);
-filteredSignal = filtfilt(b,a,demodulatedSignal);
+filteredSignal1 = filtfilt(b,a,demodulatedSignal1);
+filteredSignal2 = filtfilt(b,a,demodulatedSignal2);
 
 if(showFigures)
     figure();
-    plot(index,filteredSignal(1:length(index)));
+    plot(index,filteredSignal1(1:length(index)));
+    figure();
+    plot(index,filteredSignal2(1:length(index)));
 end
 
-%Obtain midpoints from recieved filtered signal
-demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
-demodulatedData = demodulatedData./(amplitude^2);
+%Obtain midpoints from recieved filtered signals
+demodulatedData1 = filteredSignal1(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
+demodulatedData2 = filteredSignal2(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
+
+%Find arctan of Y/X => Quadrature component/In phase compnent
+phasedData = atan2(demodulatedData2,demodulatedData1);
+phasedData = mod((2*pi-phasedData),2*pi);
+
+%disp(compressedData(1:21))
+%disp((mod((2*pi-phasedData(1:21)),2*pi)/(2*pi))*360)
 
 %Use threshold logic to decode the received signal by setting threshold at different levels
-decodedData = MaryDataDecoding(demodulatedData, newSize, M, threshold);
+decodedData = MaryPSKDataDecoding(phasedData, newSize, M);
 
 %function to decompress data symbols eg. 7 = 111
 decompressedData = DecompressData(decodedData,newSize, m);
 
-%disp(originalData(1:21));
-%disp(compressedData(1:10));
-%disp(decodedData(1:10));
-%disp(compressedData(11:20));
-%disp(decodedData(11:20));
-%disp(decompressedData(1:21));
+% disp(originalData(1:21));
+% disp(compressedData(1:10));
+% disp(decodedData(1:10));
+% disp(compressedData(11:20));
+% disp(decodedData(11:20));
+% disp(decompressedData(1:21));
 
 %Calculate the bit error rate
 errorRate = ErrorRate(originalData,decompressedData, SIZE);

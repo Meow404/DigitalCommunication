@@ -8,7 +8,7 @@ figure();
 finalErrorRate = SNRTraverse (SNR, count, 'Part2_OOK');
 semilogy(SNR, max(10^(-5),finalErrorRate));
 
-title('Error Rate Vs SNR for [OOK, BPSK, M-ARY ASK(2 bit), BFSK]')
+title( {'Error Rate Vs SNR';'\fontsize{8}[OOK, BPSK, M-ARY ASK(2 bit), M-ARY PSK(2 bit), BFSK]'},'FontWeight','normal','fontsize',10)
 xlabel('SNR')
 ylabel('Error Rate')
 hold on;
@@ -19,10 +19,13 @@ semilogy(SNR, max(10^(-5),finalErrorRate));
 finalErrorRate = SNRTraverse (SNR, count, 'Part2_MaryASK');
 semilogy(SNR, max(10^(-5),finalErrorRate));
 
+finalErrorRate = SNRTraverse (SNR, count, 'Part2_MaryPSK');
+semilogy(SNR, max(10^(-5),finalErrorRate));
+
 finalErrorRate = SNRTraverse (SNR, count, 'Part2_BFSK');
 semilogy(SNR, max(10^(-5),finalErrorRate));
 
-legend({'OOK','BPSK','M-Ary','BFSK'},'Location','southwest')
+legend({'OOK','BPSK','M-Ary ASK','M-Ary PSK','BFSK'},'Location','southwest')
 
 disp("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
