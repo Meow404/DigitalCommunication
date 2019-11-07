@@ -4,8 +4,8 @@ SNR = 5;
 while(SNR<=50)
 Data = DataToSignalGeneration(originalData, SIZE);
 noisySignal = NoisySignalGeneration(Data, SIZE, SNR);
-decodedData = DataDecoding(noisySignal, SIZE, 0);
-errorRate = ErrorRate(originalData,decodedData, SIZE,[0,1]);
+decodedData = DataDecoding(noisySignal, SIZE, 0, [0,1]);
+errorRate = ErrorRate(originalData,decodedData, SIZE);
 
 disp(errorRate);
 
