@@ -1,6 +1,4 @@
-function message = generateMessage(data, n, k, parityCheckMatrix)
-
-synTable = mySyndtable(parityCheckMatrix); %reUsed/Copied code to avoid displays
+function message = generateMessage(data, n, k, type, generator, synd)
 
 noOfCodeWords = ceil(size(data,2)/n);
 newSize = noOfCodeWords*k;
@@ -8,14 +6,12 @@ message = zeros(1,newSize);
 
 for i = 0:noOfCodeWords-1
     codeWord = data(n*i+1:n*(i+1));
-    error = mod(codeWord*parityCheckMatrix.',2);
-    if(sum(error) == 0)
-        receivedMessage = codeWord(n-k+1:n);
+    if(nargin == 4)
+        receivedMessage = decode(codeWord, n, k, type);
+    elseif(nargin == 5)
+        receivedMessage = decode(codeWord, n, k, type, generator);
     else
-        decimal =  bi2de(error,'left-msb');
-        correct = synTable(decimal+1,:);
-        correctedCodeWord = mod(correct + codeWord,2);
-        receivedMessage = correctedCodeWord(n-k+1:n);
+        receivedMessage = decode(codeWord, n, k, type, generator, synd);
     end
     message(k*i+1:k*(i+1)) = receivedMessage;
 end

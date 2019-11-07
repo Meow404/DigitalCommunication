@@ -85,14 +85,14 @@ if(showGraphs)
 end
 
 %Obtain midpoints from recieved filtered signal
-demodulatedSignal = filteredSignal1-filteredSignal2;
+differenceSignal = filteredSignal1-filteredSignal2;
 
 if(showGraphs)
     figure();
-    plot(index,demodulatedSignal(1:length(index)));
+    plot(index,differenceSignal(1:length(index)));
 end
 
-demodulatedData = demodulatedSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
+demodulatedData = differenceSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
 
 %Use threshold logic to decode the received signal by setting threshold to 0.5
 decodedData = DataDecoding(demodulatedData, SIZE, 0,[0,1]);

@@ -1,4 +1,4 @@
-function errorRate = Part3_OOK(SNR, showFigures,n, k)
+function errorRate = Part3_OOKLinear(SNR, showFigures, n, k)
 
 if(nargin == 2)
     n = 7;
@@ -19,25 +19,16 @@ dataRate = 1000; %Number of bits transfered per second
 numberOfSamplesPerBit =  round(Fs/dataRate); %Number of samples per bit
 totalNumberOfSamples = round(Fs*newSize/dataRate); %Total Number of samples to be modulated
 
-P = randi([0 1],[k,n-k]);
-Q = unique(P,'rows');
-
-while(size(P,1) ~= size(Q,1))
-    P = randi([0 1],[k,n-k]);
-    Q = unique(P,'rows');
-end
-
-G = [P, eye(k)];
-H = [eye(n-k), P.'];
-%disp(G);
-%disp(H);
-
 %Format data adds additional 0s to the end of the original data array if
 %there is a lack of number of bits eg 1024 => 1 bit extra, therefore add 2
 %zeros at the end of the array. Therefore new length = 1026
 formattedData = FormatData(originalData, SIZE, k);
 
-codeWords = generateCodeWords(formattedData, n, k, G);
+polynomial = cyclpoly(n,k);
+parmat = cyclgen(n,polynomial);
+generatorMatrix = gen2par(parmat);
+
+codeWords = generateCodeWords(formattedData, n, k, 'linear/binary', generatorMatrix);
 
 %disp(size(formattedData(1:7*k)));
 %disp(size(codeWords));
@@ -96,7 +87,7 @@ demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:t
 %Use threshold logic to decode the received signal by setting threshold to 0.5
 decodedData = DataDecoding(demodulatedData, newSize, 0.5,[0,1]);
 
-message = generateMessage(decodedData, n, k, H);
+message = generateMessage(decodedData, n, k, 'linear/binary', generatorMatrix);
 
 % disp(originalData(1:10))
 % disp(message(1:10))
