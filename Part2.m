@@ -29,8 +29,8 @@ legend({'OOK','BPSK','M-Ary ASK','M-Ary PSK','BFSK'},'Location','southwest')
 
 disp("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-% SNR = (0.25:0.25:50);
-% Error Rate Vs SNR for M-Ary ASK [2 bit, 3 bit, 4 bit, 5 bit] encoding
+SNR = (0.25:0.25:50);
+Error Rate Vs SNR for M-Ary ASK [2 bit, 3 bit, 4 bit, 5 bit] encoding
 
 figure();
 
