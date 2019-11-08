@@ -60,10 +60,10 @@ if(showFigures)
 end
 
 %Obtain midpoints from recieved filtered signal
-demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
+receivedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
 
 %Use threshold logic to decode the received signal by setting threshold to 0.5
-decodedData = DataDecoding(demodulatedData, SIZE, 0.5,[0,1]);
+decodedData = DataDecoding(receivedData, SIZE, 0.5,[0,1]);
 
 %Calculate the bit error rate
 errorRate = ErrorRate(originalData,decodedData, SIZE);

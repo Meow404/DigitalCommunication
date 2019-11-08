@@ -76,11 +76,11 @@ if(showFigures)
 end
 
 %Obtain midpoints from recieved filtered signal
-demodulatedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
-demodulatedData = demodulatedData./(amplitude^2);
+receivedData = filteredSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);
+receivedData = receivedData./(amplitude^2);
 
 %Use threshold logic to decode the received signal by setting threshold at different levels
-decodedData = MaryASKDataDecoding(demodulatedData, newSize, M, threshold);
+decodedData = MaryASKDataDecoding(receivedData, newSize, M, threshold);
 
 %function to decompress data symbols eg. 7 = 111
 decompressedData = DecompressData(decodedData,newSize, m);
