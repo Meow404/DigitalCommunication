@@ -1,5 +1,9 @@
 function errorRate = Part2_BFSK(SNR, showFigures)
 
+% To run function type in the following commands in command prompt
+% Part2_BFSK(5, 0) => Provides error rate for OOK with SNR 5 without figures
+% Part2_BFSK(5, 1) => Provides error rate for OOK with SNR 5 with figures
+
 SIZE = 1024; %Number of bits to be transmitted
 originalData= randi([0 1],1,SIZE); % This generates an array of random binary numbers
 
@@ -105,7 +109,7 @@ differenceSignal = filteredSignal1-filteredSignal2;
 if(showFigures)
     figure();
     plot(index,differenceSignal(1:length(index)));
-    title('Difference Signal 2')
+    title('Difference Signal')
 end
 
 receivedData = differenceSignal(numberOfSamplesPerBit/2:numberOfSamplesPerBit:totalNumberOfSamples);

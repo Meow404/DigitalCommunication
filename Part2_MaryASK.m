@@ -1,5 +1,11 @@
 function errorRate = Part2_MaryASK(SNR, showFigures, m, amplitude, threshold)
 
+% To run function type in the following commands in command prompt
+% Part2_MaryASK(5, 0) => Provides error rate for OOK with SNR 5 without figures
+% Part2_MaryASK(5, 1) => Provides error rate for OOK with SNR 5 with figures
+% Part2_MaryASK(5, 0, 3, 2, 0.5) => Provides error rate for OOK with [SNR 5, # of bits 3, amplitude 2, threshold 0.5] without figures
+% Part2_MaryASK(5, 1, 3, 2, 0.5) => Provides error rate for OOK with [SNR 5, # of bits 3, amplitude 2, threshold 0.5]  with figures
+
 if(nargin == 2)
         m = 2; %Number of BITS AVAILABLE FOR ENCODING
         amplitude = 1;

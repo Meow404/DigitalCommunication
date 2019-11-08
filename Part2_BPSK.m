@@ -1,5 +1,9 @@
 function errorRate = Part2_BPSK(SNR, showFigures)
 
+% To run function type in the following commands in command prompt
+% Part2_BPSK(5, 0) => Provides error rate for OOK with SNR 5 without figures
+% Part2_BPSK(5, 1) => Provides error rate for OOK with SNR 5 with figures
+
 SIZE = 1024; %Number of bits to be transmitted
 originalData= randi([0 1],1,SIZE); % This generates an array of random binary numbers
 

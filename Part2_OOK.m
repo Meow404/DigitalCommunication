@@ -1,5 +1,9 @@
 function errorRate = Part2_OOK(SNR, showFigures)
 
+% To run function type in the following commands in command prompt
+% Part2_OOK(5, 0) => Provides error rate for OOK with SNR 5 without figures
+% Part2_OOK(5, 1) => Provides error rate for OOK with SNR 5 with figures
+
 SIZE = 1024; %Number of bits to be transmitted
 originalData= randi([0 1],1,SIZE); % This generates an array of random binary numbers
 %SNR = 20; %Signal  to Noise Ratio
