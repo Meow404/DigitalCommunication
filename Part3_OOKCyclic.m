@@ -1,5 +1,11 @@
 function errorRate = Part3_OOKCyclic(SNR, showFigures, n, k)
 
+% To run function type in the following commands in command prompt
+% Part3_OOKCyclic(5, 0) => Provides error rate for OOK with SNR 5 without figures
+% Part3_OOKCyclic(5, 1) => Provides error rate for OOK with SNR 5 with figures
+% Part3_OOKCyclic(5, 0, 8, 4) => Provides error rate for OOK with [SNR 5, n 8, k 4] without figures
+% Part3_OOKCyclic(5, 1, 8, 4) => Provides error rate for OOK with [SNR 5, n 8, k 4] with figures
+
 if(nargin == 2)
     n = 7;
     k = 4;

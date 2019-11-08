@@ -1,5 +1,5 @@
-SNR = (0.5:0.5:25);  %Range of SNR values
-count = 100;    %Iterations per SNR value for more accurate result
+SNR = (1:1:25);  %Range of SNR values
+count = 10;    %Iterations per SNR value for more accurate result
 
 % Error Rate Vs SNR for [OOK, BPSK, M-Ary(2 bit), BFSK]
 
@@ -29,7 +29,7 @@ legend({'OOK','BPSK','M-Ary ASK','M-Ary PSK','BFSK'},'Location','southwest')
 
 disp("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-SNR = (0.5:0.5:50);
+%SNR = (0.5:0.5:50);
 % Error Rate Vs SNR for M-Ary ASK [2 bit, 3 bit, 4 bit, 5 bit] encoding
 
 figure();

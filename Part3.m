@@ -1,7 +1,7 @@
 SNR = (1:1:25);  %Range of SNR values
-count = 100;    %Iterations per SNR value for more accurate result
+count = 10;    %Iterations per SNR value for more accurate result
 
-% Error Rate Vs SNR for [OOK, BPSK, M-Ary(2 bit), BFSK]
+% Error Rate Vs SNR for [OOK with Linear Block Coding]
 
 figure();
 
@@ -20,6 +20,8 @@ legend({'None', 'Linear'},'Location','southwest')
 
 disp("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
+% Error Rate Vs SNR for [OOK with Hamming Encoding]
+
 figure();
 
 finalErrorRate = SNRTraverse (SNR, count, 'Part2_OOK');
@@ -36,6 +38,8 @@ semilogy(SNR, max(10^(-5),finalErrorRate));
 legend({'None','Hamming'},'Location','southwest')
 
 disp("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+% Error Rate Vs SNR for [OOK with Cyclic Block Coding]
 
 figure();
 
