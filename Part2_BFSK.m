@@ -59,7 +59,7 @@ if(showFigures)
     figure();
     plot(index,modulatedSignal(index));
     title('Modulated Signal');
-    ylim([-2 2]);
+    ylim([-1.5 1.5]);
 end
 
 %To generate artificial noise to be added with the modulated signal

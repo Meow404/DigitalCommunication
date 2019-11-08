@@ -28,6 +28,15 @@ formattedData = FormatData(originalData, SIZE, m);
 %Function to compress data eg 1001 = 9
 compressedData = CompressData(formattedData,newSize, m);
 
+if(showFigures)
+    figure();
+    noOfData = ceil(length(index)/numberOfSamplesPerBit);
+    stairs(compressedData(1:noOfData));
+    title('Data Wave Form');
+    ylim([-1 M]);
+    xlim([1 noOfData]); 
+end
+
 %Initialization of Carrier Signal with an array of zeros
 carrierSignal = zeros(1,totalNumberOfSamples);
 
@@ -46,7 +55,9 @@ modulatedSignal = carrierSignal.*replicatedData;
 
 if(showFigures)
     figure();
-    plot(index,modulatedSignal(1:length(index)));
+    plot(index,modulatedSignal(index));
+    title('Modulated Signal');
+    ylim([-1.5 amplitude+0.5]);
 end
 
 %To generate artificial noise to be added with the modulated signal
@@ -54,7 +65,8 @@ noisySignal = NoisySignalGeneration(modulatedSignal, totalNumberOfSamples, SNR);
 
 if(showFigures)
     figure();
-    plot(index,noisySignal(1:length(index)));
+    plot(index,noisySignal(index));
+    title('Receieved Signal');
 end
 
 %To Obtain demodulated signal by multiplying with twice the carrier signal
@@ -62,7 +74,8 @@ demodulatedSignal = (2*carrierSignal).*noisySignal;
 
 if(showFigures)
     figure();
-    plot(index,demodulatedSignal(1:2000));
+    plot(index,demodulatedSignal(index));
+    title('Demodulated Signal');
 end
 
 %To generate a low pass butterworth 6th order filter and obtain filtered signal with
@@ -72,7 +85,8 @@ filteredSignal = filtfilt(b,a,demodulatedSignal);
 
 if(showFigures)
     figure();
-    plot(index,filteredSignal(1:length(index)));
+    plot(index,filteredSignal(index));
+    title('Filtered Signal')
 end
 
 %Obtain midpoints from recieved filtered signal
@@ -82,15 +96,17 @@ receivedData = receivedData./(amplitude^2);
 %Use threshold logic to decode the received signal by setting threshold at different levels
 decodedData = MaryASKDataDecoding(receivedData, newSize, M, threshold);
 
+if(showFigures)
+    figure();
+    noOfData = ceil(length(index)/numberOfSamplesPerBit);
+    stairs(decodedData(1:noOfData));
+    title('Decoded Signal');
+    ylim([-1 M]);
+    xlim([1 noOfData]); 
+end
+
 %function to decompress data symbols eg. 7 = 111
 decompressedData = DecompressData(decodedData,newSize, m);
-
-%disp(originalData(1:21));
-%disp(compressedData(1:10));
-%disp(decodedData(1:10));
-%disp(compressedData(11:20));
-%disp(decodedData(11:20));
-%disp(decompressedData(1:21));
 
 %Calculate the bit error rate
 errorRate = ErrorRate(originalData,decompressedData, SIZE);

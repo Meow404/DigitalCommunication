@@ -5,7 +5,7 @@ originalData= randi([0 1],1,SIZE); % This generates an array of random binary nu
 
 Fc = 10000; %Carrier Frequency
 Fs = Fc * 4; %Sampling Frequency
-index = 1:2000; %Output Range
+index = 1:500; %Output Range
 
 dataRate = 1000; %Number of bits transfered per second
 numberOfSamplesPerBit =  round(Fs/dataRate); %Number of samples per bit

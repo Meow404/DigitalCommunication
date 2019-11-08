@@ -64,7 +64,7 @@ noisySignal = NoisySignalGeneration(modulatedSignal, totalNumberOfSamples, SNR);
 if(showFigures)
     figure();
     plot(index,noisySignal(index));
-    title('Received Signal');
+    title('Receieved Signal');
 end
 
 %To Obtain demodulated signal by multiplying with twice the Cos of carrier
@@ -119,6 +119,13 @@ end
 
 %function to decompress data symbols eg. 7 = 111
 decompressedData = DecompressData(decodedData,newSize, m);
+
+% disp(originalData(1:21));
+% disp(compressedData(1:10));
+% disp(decodedData(1:10));
+% disp(compressedData(11:20));
+% disp(decodedData(11:20));
+% disp(decompressedData(1:21));
 
 %Calculate the bit error rate
 errorRate = ErrorRate(originalData,decompressedData, SIZE);
