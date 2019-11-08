@@ -9,5 +9,4 @@ data=zeros(1,SIZE);
             data(loop_var)= 1;
         end
     end
-    
 end
